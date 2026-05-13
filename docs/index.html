@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Escape Room 3D — Documentación</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0a0a14;
+      --bg2:      #0d1220;
+      --gold:     #ffc832;
+      --gold-dim: #c8960c;
+      --parchment:#e8d8a0;
+      --blue:     #50a0ff;
+      --text:     #c8d8f0;
+      --border:   #ffc83244;
+      --red:      #dc4646;
+      --green:    #3cdc78;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', 'Inter', sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: #07070f;
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav .brand {
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 1rem 1.5rem 1rem 0;
+      text-decoration: none;
+      border-right: 1px solid var(--border);
+      margin-right: 1rem;
+      white-space: nowrap;
+    }
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      padding: .75rem .9rem;
+      font-size: .9rem;
+      transition: color .2s;
+      white-space: nowrap;
+    }
+    nav a:hover, nav a.active { color: var(--gold); }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 5rem 2rem 4rem;
+      background: radial-gradient(ellipse at 50% 0%, #1a1430 0%, var(--bg) 70%);
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-icon { font-size: 4rem; display: block; margin-bottom: 1rem; }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      color: var(--gold);
+      letter-spacing: 2px;
+      margin-bottom: .5rem;
+    }
+    .hero p {
+      color: var(--parchment);
+      font-size: 1.1rem;
+      max-width: 640px;
+      margin: 0 auto 2rem;
+    }
+    .hero-badges { display: flex; gap: .75rem; justify-content: center; flex-wrap: wrap; }
+    .badge {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: .3rem .9rem;
+      font-size: .82rem;
+      color: var(--parchment);
+    }
+
+    /* ── MAIN CONTENT ── */
+    main { max-width: 1100px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+
+    section { margin-bottom: 4rem; }
+    h2 {
+      color: var(--gold);
+      font-size: 1.6rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: .5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    h3 { color: var(--parchment); font-size: 1.1rem; margin-bottom: .5rem; }
+    p { margin-bottom: 1rem; }
+
+    /* ── CARDS GRID ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.25rem 1rem;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .card:hover {
+      border-color: var(--gold);
+      box-shadow: 0 0 18px #ffc83233;
+    }
+    .card-icon { font-size: 1.8rem; margin-bottom: .5rem; display: block; }
+    .card h3 { color: var(--gold); font-size: 1rem; margin-bottom: .25rem; }
+    .card p { color: var(--text); font-size: .85rem; margin: 0; }
+
+    /* ── FEATURES LIST ── */
+    .features { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: .75rem; }
+    .features li {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: .85rem 1rem;
+      display: flex;
+      align-items: flex-start;
+      gap: .75rem;
+    }
+    .features li .fi { font-size: 1.3rem; flex-shrink: 0; }
+    .features li .ft { color: var(--parchment); font-size: .9rem; }
+
+    /* ── DOC LINKS ── */
+    .doc-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .doc-link {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.25rem;
+      text-decoration: none;
+      transition: border-color .2s, box-shadow .2s, transform .15s;
+      display: block;
+    }
+    .doc-link:hover {
+      border-color: var(--gold);
+      box-shadow: 0 0 20px #ffc83233;
+      transform: translateY(-2px);
+    }
+    .doc-link .dl-icon { font-size: 2rem; display: block; margin-bottom: .6rem; }
+    .doc-link .dl-title { color: var(--gold); font-weight: 700; font-size: 1rem; display: block; margin-bottom: .3rem; }
+    .doc-link .dl-desc { color: var(--text); font-size: .85rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      color: #5a6a80;
+      font-size: .85rem;
+    }
+    footer span { color: var(--gold); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      nav { flex-wrap: wrap; padding: .5rem 1rem; }
+      nav .brand { border-right: none; margin-right: 0; padding: .5rem 0; width: 100%; }
+      main { padding: 2rem 1rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="index.html">🔐 Escape Room 3D</a>
+  <a href="index.html" class="active">Inicio</a>
+  <a href="user-manual.html">Manual</a>
+  <a href="technical.html">Técnico</a>
+  <a href="api-reference.html">API</a>
+  <a href="creator-guide.html">Creadores</a>
+</nav>
+
+<header class="hero">
+  <span class="hero-icon">🔐</span>
+  <h1>Escape Room 3D</h1>
+  <p>Un juego de preguntas y respuestas con entorno 3D, creado con Django, Streamlit y pygame</p>
+  <div class="hero-badges">
+    <span class="badge">🐍 Python 3.12</span>
+    <span class="badge">🦄 Django 5.2</span>
+    <span class="badge">🎮 pygame + PyOpenGL</span>
+    <span class="badge">📊 Streamlit</span>
+    <span class="badge">🔑 JWT Auth</span>
+    <span class="badge">🗄️ SQLite</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- ¿Qué es? -->
+  <section id="about">
+    <h2>¿Qué es Escape Room 3D?</h2>
+    <p>
+      <strong style="color:var(--parchment)">Escape Room 3D</strong> es una aplicación de entretenimiento educativo
+      que combina un juego de preguntas y respuestas con un entorno tridimensional renderizado en tiempo real.
+      El jugador controla un personaje animado dentro de una sala 3D y debe responder correctamente un número
+      mínimo de preguntas para "escapar" a través de la puerta.
+    </p>
+    <p>
+      El proyecto está compuesto por tres capas independientes que se comunican a través de una API REST:
+      un <strong style="color:var(--gold)">backend Django</strong> que gestiona usuarios, sesiones y rooms;
+      un <strong style="color:var(--gold)">dashboard Streamlit</strong> que sirve de interfaz web; y un
+      <strong style="color:var(--gold)">cliente de juego pygame/OpenGL</strong> que renderiza la sala 3D.
+    </p>
+    <p>
+      Además del modo clásico con preguntas predefinidas, el proyecto incluye un
+      <strong style="color:var(--parchment)">Creator Mode</strong> que permite a cualquier usuario registrado
+      diseñar sus propias Escape Rooms con preguntas personalizadas y publicarlas en el catálogo público.
+    </p>
+  </section>
+
+  <!-- Stack tecnológico -->
+  <section id="stack">
+    <h2>Stack tecnológico</h2>
+    <div class="cards">
+      <div class="card">
+        <span class="card-icon">🦄</span>
+        <h3>Django 5.2</h3>
+        <p>Framework web backend. ORM, migraciones, admin y gestión de usuarios.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🔌</span>
+        <h3>Django REST Framework</h3>
+        <p>API REST con ViewSets, serializers y permisos granulares.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🔑</span>
+        <h3>SimpleJWT</h3>
+        <p>Autenticación stateless con access token (8 h) y refresh token (7 días).</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">📊</span>
+        <h3>Streamlit</h3>
+        <p>Dashboard web interactivo con tabs, gráficos Plotly y gestión de estado.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🎮</span>
+        <h3>pygame</h3>
+        <p>Motor de juego 2D/3D. Gestión de eventos, fuentes, superficies y HUD.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🧊</span>
+        <h3>PyOpenGL</h3>
+        <p>Renderizado 3D con OpenGL legacy (glBegin/glEnd). Sala, personaje y antorchas.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🗄️</span>
+        <h3>SQLite</h3>
+        <p>Base de datos embebida. Sin configuración adicional, ideal para desarrollo.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">📦</span>
+        <h3>requests / Plotly</h3>
+        <p>Cliente HTTP para el game client y gráficos interactivos en el dashboard.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Características -->
+  <section id="features">
+    <h2>Características principales</h2>
+    <ul class="features">
+      <li>
+        <span class="fi">🏰</span>
+        <span class="ft"><strong>Sala 3D con personaje animado</strong> — Entorno renderizado con OpenGL. El personaje camina hacia la puerta con cada respuesta correcta y retrocede con cada fallo.</span>
+      </li>
+      <li>
+        <span class="fi">🔥</span>
+        <span class="ft"><strong>Antorchas con parpadeo dinámico</strong> — Efecto de llama animada usando <code>math.sin(t)</code> con interpolación de color naranja→amarillo a ~8 Hz.</span>
+      </li>
+      <li>
+        <span class="fi">❓</span>
+        <span class="ft"><strong>Sistema de preguntas y respuestas</strong> — HUD 2D renderizado como textura OpenGL con alpha blending. Teclas 1–4 para responder.</span>
+      </li>
+      <li>
+        <span class="fi">⚒️</span>
+        <span class="ft"><strong>Creator Mode</strong> — Crea tus propias Escape Rooms con título, descripción, dificultad y hasta 62 preguntas personalizadas.</span>
+      </li>
+      <li>
+        <span class="fi">🗺️</span>
+        <span class="ft"><strong>Catálogo público</strong> — Explora y juega rooms publicadas por otros usuarios. Filtra por dificultad: Fácil, Medio o Difícil.</span>
+      </li>
+      <li>
+        <span class="fi">📊</span>
+        <span class="ft"><strong>Dashboard web con estadísticas</strong> — Historial de partidas, tablero de mejores tiempos, gráficos de rendimiento y estadísticas globales.</span>
+      </li>
+      <li>
+        <span class="fi">🏆</span>
+        <span class="ft"><strong>Leaderboard</strong> — Top 10 de mejores tiempos en el modo clásico, accesible públicamente sin autenticación.</span>
+      </li>
+      <li>
+        <span class="fi">🎨</span>
+        <span class="ft"><strong>Interfaz estilo RPG</strong> — Paleta oscura con acentos dorados, bordes pergamino, efectos de flash y pantalla de título animada.</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Links a documentación -->
+  <section id="docs">
+    <h2>Documentación</h2>
+    <div class="doc-links">
+      <a class="doc-link" href="user-manual.html">
+        <span class="dl-icon">📖</span>
+        <span class="dl-title">Manual de Usuario</span>
+        <span class="dl-desc">Instalación, configuración, guía de uso del dashboard y del juego, solución de problemas.</span>
+      </a>
+      <a class="doc-link" href="technical.html">
+        <span class="dl-icon">⚙️</span>
+        <span class="dl-title">Descripción Técnica</span>
+        <span class="dl-desc">Arquitectura del sistema, modelos de datos, flujo de autenticación y decisiones de diseño.</span>
+      </a>
+      <a class="doc-link" href="api-reference.html">
+        <span class="dl-icon">🔌</span>
+        <span class="dl-title">Referencia API REST</span>
+        <span class="dl-desc">Todos los endpoints, métodos HTTP, parámetros, autenticación y códigos de respuesta.</span>
+      </a>
+      <a class="doc-link" href="creator-guide.html">
+        <span class="dl-icon">⚒️</span>
+        <span class="dl-title">Guía del Creator</span>
+        <span class="dl-desc">Cómo crear, configurar y publicar tus propias Escape Rooms en el catálogo.</span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Escape Room 3D &nbsp;·&nbsp; Documentación generada para <span>GitHub Pages</span></p>
+  <p style="margin-top:.4rem">Django 5.2 · DRF · SimpleJWT · Streamlit · pygame · PyOpenGL · SQLite</p>
+</footer>
+
+</body>
+</html>

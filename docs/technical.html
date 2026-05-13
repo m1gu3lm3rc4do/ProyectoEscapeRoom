@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Descripción Técnica — Escape Room 3D</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#0a0a14; --bg2:#0d1220; --gold:#ffc832; --gold-dim:#c8960c;
+      --parchment:#e8d8a0; --blue:#50a0ff; --text:#c8d8f0;
+      --border:#ffc83244; --red:#dc4646; --green:#3cdc78;
+    }
+    body { background:var(--bg); color:var(--text); font-family:'Segoe UI','Inter',sans-serif; line-height:1.6; }
+    nav { background:#07070f; border-bottom:1px solid var(--border); padding:0 2rem; display:flex; align-items:center; position:sticky; top:0; z-index:100; flex-wrap:wrap; }
+    nav .brand { color:var(--gold); font-weight:700; font-size:1.1rem; padding:1rem 1.5rem 1rem 0; text-decoration:none; border-right:1px solid var(--border); margin-right:1rem; white-space:nowrap; }
+    nav a { color:var(--text); text-decoration:none; padding:.75rem .9rem; font-size:.9rem; transition:color .2s; white-space:nowrap; }
+    nav a:hover, nav a.active { color:var(--gold); }
+    .page-header { background:radial-gradient(ellipse at 50% 0%,#1a1430 0%,var(--bg) 70%); border-bottom:1px solid var(--border); padding:3rem 2rem 2.5rem; text-align:center; }
+    .page-header h1 { color:var(--gold); font-size:2rem; margin-bottom:.4rem; }
+    .page-header p { color:var(--parchment); }
+    .layout { display:flex; max-width:1100px; margin:0 auto; }
+    .toc { width:240px; flex-shrink:0; padding:2rem 1rem 2rem 1.5rem; position:sticky; top:57px; height:calc(100vh - 57px); overflow-y:auto; border-right:1px solid var(--border); }
+    .toc h4 { color:var(--gold); font-size:.8rem; text-transform:uppercase; letter-spacing:1px; margin-bottom:.75rem; }
+    .toc a { display:block; color:var(--text); text-decoration:none; font-size:.85rem; padding:.3rem .5rem; border-radius:6px; transition:background .15s,color .15s; }
+    .toc a:hover { background:var(--bg2); color:var(--gold); }
+    .toc .toc-sub { padding-left:1rem; font-size:.8rem; color:#7090b0; }
+    .content { flex:1; padding:2.5rem 2rem 5rem; min-width:0; }
+    section { margin-bottom:3.5rem; scroll-margin-top:80px; }
+    h2 { color:var(--gold); font-size:1.5rem; margin-bottom:1.25rem; padding-bottom:.4rem; border-bottom:1px solid var(--border); }
+    h3 { color:var(--parchment); font-size:1.05rem; margin:1.25rem 0 .5rem; }
+    p { margin-bottom:.9rem; }
+    pre { background:#060810; border:1px solid #1e2a3a; border-radius:10px; padding:1rem 1.25rem; overflow-x:auto; margin:.75rem 0 1rem; font-size:.85rem; line-height:1.6; }
+    code { font-family:'Cascadia Code','Fira Code','Consolas',monospace; color:var(--blue); }
+    pre code { color:#a8d8ff; }
+    .hl-key { color:var(--gold); }
+    .hl-str { color:#a0e0a0; }
+    .hl-cmt { color:#4a6a4a; }
+    table { width:100%; border-collapse:collapse; margin:1rem 0; }
+    th { background:var(--bg2); color:var(--gold); text-align:left; padding:.6rem .9rem; font-size:.85rem; border-bottom:1px solid var(--border); }
+    td { padding:.55rem .9rem; border-bottom:1px solid #1a2030; font-size:.88rem; vertical-align:top; }
+    tr:hover td { background:#0d1220; }
+    .arch-box { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:1.5rem; margin:1rem 0; }
+    .arch-row { display:flex; align-items:center; gap:1rem; margin:.5rem 0; flex-wrap:wrap; }
+    .arch-comp { background:#0a0a14; border:1px solid var(--gold); border-radius:8px; padding:.6rem 1.2rem; color:var(--gold); font-weight:700; font-size:.9rem; white-space:nowrap; }
+    .arch-arrow { color:#5a7a9a; font-size:1.2rem; }
+    .arch-label { color:var(--parchment); font-size:.82rem; }
+    .info-box { border-radius:10px; padding:.9rem 1.1rem; margin:1rem 0; border-left:3px solid; font-size:.9rem; }
+    .info-box.tip { background:#0a1a0a; border-color:var(--green); color:#a0e0b0; }
+    .info-box.warn { background:#1a1000; border-color:var(--gold); color:var(--parchment); }
+    .model-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1rem; margin:1rem 0; }
+    .model-card { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:1rem; }
+    .model-card h4 { color:var(--gold); font-size:.95rem; margin-bottom:.5rem; }
+    .model-card ul { list-style:none; }
+    .model-card li { font-size:.82rem; color:var(--text); padding:.15rem 0; border-bottom:1px solid #1a2030; }
+    .model-card li:last-child { border-bottom:none; }
+    .field-type { color:var(--blue); font-size:.78rem; margin-left:.4rem; }
+    footer { text-align:center; padding:2rem; border-top:1px solid var(--border); color:#5a6a80; font-size:.85rem; }
+    footer span { color:var(--gold); }
+    @media (max-width:768px) { .toc { display:none; } .content { padding:1.5rem 1rem 4rem; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="index.html">🔐 Escape Room 3D</a>
+  <a href="index.html">Inicio</a>
+  <a href="user-manual.html">Manual</a>
+  <a href="technical.html" class="active">Técnico</a>
+  <a href="api-reference.html">API</a>
+  <a href="creator-guide.html">Creadores</a>
+</nav>
+
+<div class="page-header">
+  <h1>⚙️ Descripción Técnica</h1>
+  <p>Arquitectura, modelos de datos, flujo de autenticación y decisiones de diseño</p>
+</div>
+
+<div class="layout">
+  <aside class="toc">
+    <h4>Contenido</h4>
+    <a href="#architecture">Arquitectura del sistema</a>
+    <a href="#backend">Backend (Django)</a>
+    <a class="toc-sub" href="#models">Modelos de datos</a>
+    <a class="toc-sub" href="#auth">Autenticación JWT</a>
+    <a href="#frontend">Frontend (Streamlit)</a>
+    <a href="#game-client">Game Client (pygame)</a>
+    <a class="toc-sub" href="#opengl">Renderizado OpenGL</a>
+    <a href="#dataflow">Flujo de datos</a>
+    <a href="#decisions">Decisiones de diseño</a>
+  </aside>
+
+  <main class="content">
+
+    <section id="architecture">
+      <h2>Arquitectura del sistema</h2>
+      <p>El proyecto está compuesto por tres capas independientes que se comunican exclusivamente a través de la API REST del backend.</p>
+
+      <div class="arch-box">
+        <div class="arch-row">
+          <div class="arch-comp">🌐 Navegador</div>
+          <div class="arch-arrow">⟷</div>
+          <div class="arch-comp">📊 Streamlit<br><small style="font-weight:400;color:var(--parchment)">:8501</small></div>
+          <div class="arch-arrow">⟷ HTTP/REST ⟷</div>
+          <div class="arch-comp">🦄 Django<br><small style="font-weight:400;color:var(--parchment)">:8000</small></div>
+          <div class="arch-arrow">⟷</div>
+          <div class="arch-comp">🗄️ SQLite</div>
+        </div>
+        <div class="arch-row" style="margin-top:1rem;">
+          <div class="arch-comp">🎮 pygame/OpenGL<br><small style="font-weight:400;color:var(--parchment)">subprocess</small></div>
+          <div class="arch-arrow">⟷ HTTP/REST ⟷</div>
+          <div class="arch-comp">🦄 Django<br><small style="font-weight:400;color:var(--parchment)">:8000</small></div>
+        </div>
+      </div>
+
+      <table>
+        <thead><tr><th>Componente</th><th>Tecnología</th><th>Puerto</th><th>Responsabilidad</th></tr></thead>
+        <tbody>
+          <tr><td>Backend</td><td>Django 5.2 + DRF</td><td>8000</td><td>API REST, autenticación JWT, ORM, base de datos</td></tr>
+          <tr><td>Frontend</td><td>Streamlit</td><td>8501</td><td>Dashboard web, gestión de estado, lanzamiento del juego</td></tr>
+          <tr><td>Game Client</td><td>pygame + PyOpenGL</td><td>—</td><td>Renderizado 3D, HUD, lógica de juego, envío de sesión</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="backend">
+      <h2>Backend (Django)</h2>
+
+      <h3>Estructura de carpetas</h3>
+      <pre><code>Backend/
+├── EscapeRoomPy/
+│   ├── api/
+│   │   ├── models.py        <span class="hl-cmt"># GameSession, Room, Question, RoomSession</span>
+│   │   ├── serializers.py   <span class="hl-cmt"># Serializers DRF con validación</span>
+│   │   ├── views.py         <span class="hl-cmt"># ViewSets y endpoints funcionales</span>
+│   │   ├── urls.py          <span class="hl-cmt"># Router + rutas JWT</span>
+│   │   └── tests/           <span class="hl-cmt"># Tests unitarios y de propiedad</span>
+│   ├── src/
+│   │   └── settings.py      <span class="hl-cmt"># Configuración Django</span>
+│   └── manage.py
+└── req.txt                  <span class="hl-cmt"># Dependencias del backend</span></code></pre>
+
+      <h3 id="models">Modelos de datos</h3>
+      <div class="model-grid">
+        <div class="model-card">
+          <h4>GameSession</h4>
+          <ul>
+            <li>user <span class="field-type">FK → User</span></li>
+            <li>difficulty <span class="field-type">CharField (easy/medium/hard)</span></li>
+            <li>time_taken <span class="field-type">FloatField (segundos)</span></li>
+            <li>questions_answered <span class="field-type">IntegerField</span></li>
+            <li>correct_answers <span class="field-type">IntegerField</span></li>
+            <li>completed <span class="field-type">BooleanField</span></li>
+            <li>created_at <span class="field-type">DateTimeField (auto)</span></li>
+          </ul>
+        </div>
+        <div class="model-card">
+          <h4>Room</h4>
+          <ul>
+            <li>title <span class="field-type">CharField (max 100)</span></li>
+            <li>description <span class="field-type">TextField (max 500)</span></li>
+            <li>difficulty <span class="field-type">CharField (easy/medium/hard)</span></li>
+            <li>status <span class="field-type">CharField (draft/published)</span></li>
+            <li>min_correct <span class="field-type">PositiveIntegerField</span></li>
+            <li>creator <span class="field-type">FK → User</span></li>
+            <li>created_at <span class="field-type">DateTimeField (auto)</span></li>
+            <li>published_at <span class="field-type">DateTimeField (nullable)</span></li>
+          </ul>
+        </div>
+        <div class="model-card">
+          <h4>Question</h4>
+          <ul>
+            <li>room <span class="field-type">FK → Room</span></li>
+            <li>creator <span class="field-type">FK → User</span></li>
+            <li>text <span class="field-type">CharField (max 500)</span></li>
+            <li>option_0 … option_3 <span class="field-type">CharField (max 200)</span></li>
+            <li>correct_index <span class="field-type">PositiveSmallIntegerField (0–3)</span></li>
+            <li>created_at <span class="field-type">DateTimeField (auto)</span></li>
+          </ul>
+        </div>
+        <div class="model-card">
+          <h4>RoomSession</h4>
+          <ul>
+            <li>room <span class="field-type">FK → Room</span></li>
+            <li>user <span class="field-type">FK → User</span></li>
+            <li>time_taken <span class="field-type">FloatField (segundos)</span></li>
+            <li>questions_answered <span class="field-type">IntegerField</span></li>
+            <li>correct_answers <span class="field-type">IntegerField</span></li>
+            <li>completed <span class="field-type">BooleanField</span></li>
+            <li>created_at <span class="field-type">DateTimeField (auto)</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 id="auth">Autenticación JWT</h3>
+      <p>Se usa <strong>djangorestframework-simplejwt</strong>. La configuración en <code>settings.py</code>:</p>
+      <pre><code><span class="hl-key">SIMPLE_JWT</span> = {
+    <span class="hl-str">"ACCESS_TOKEN_LIFETIME"</span>:  timedelta(<span class="hl-key">hours</span>=8),
+    <span class="hl-str">"REFRESH_TOKEN_LIFETIME"</span>: timedelta(<span class="hl-key">days</span>=7),
+    <span class="hl-str">"AUTH_HEADER_TYPES"</span>:      (<span class="hl-str">"Bearer"</span>,),
+}</code></pre>
+      <p>El cliente envía el token en el header <code>Authorization: Bearer &lt;token&gt;</code>. El dashboard renueva el access token automáticamente usando el refresh token antes de que expire.</p>
+
+      <h3>CORS</h3>
+      <pre><code><span class="hl-key">CORS_ALLOW_ALL_ORIGINS</span> = <span class="hl-str">True</span>  <span class="hl-cmt"># Desarrollo — restringir en producción</span></code></pre>
+
+      <h3>Base de datos</h3>
+      <p>SQLite con la configuración por defecto de Django. El archivo <code>db.sqlite3</code> se crea automáticamente al ejecutar las migraciones.</p>
+    </section>
+
+    <section id="frontend">
+      <h2>Frontend (Streamlit)</h2>
+      <p>Archivo principal: <code>Frontend/app.py</code></p>
+
+      <h3>Gestión de estado</h3>
+      <p>Streamlit es stateless por naturaleza. El estado de sesión se mantiene en <code>st.session_state</code>:</p>
+      <pre><code><span class="hl-key">_SESSION_DEFAULTS</span> = [
+    (<span class="hl-str">"token"</span>,          <span class="hl-key">None</span>),   <span class="hl-cmt"># JWT access token</span>
+    (<span class="hl-str">"refresh_token"</span>,  <span class="hl-key">None</span>),   <span class="hl-cmt"># JWT refresh token</span>
+    (<span class="hl-str">"user"</span>,           <span class="hl-key">None</span>),   <span class="hl-cmt"># Nombre de usuario</span>
+    (<span class="hl-str">"studio_room_id"</span>, <span class="hl-key">None</span>),   <span class="hl-cmt"># Room seleccionada en Creator Studio</span>
+]</code></pre>
+
+      <h3>Renovación automática de token</h3>
+      <p>La función <code>api_request()</code> envuelve todas las llamadas HTTP. Si recibe un <code>401</code>, intenta renovar el access token con el refresh token antes de reintentar la petición.</p>
+
+      <h3>Lanzamiento del Game Client</h3>
+      <p>El juego se lanza como subproceso independiente con <code>subprocess.Popen</code>, pasando el token JWT y el nombre de usuario como argumentos de línea de comandos:</p>
+      <pre><code>args = [venv_python, game_path, token, username, difficulty]
+<span class="hl-key">if</span> room_id <span class="hl-key">is not None</span>:
+    args.append(str(room_id))
+
+subprocess.Popen(args, creationflags=CREATE_NEW_CONSOLE)</code></pre>
+    </section>
+
+    <section id="game-client">
+      <h2>Game Client (pygame + PyOpenGL)</h2>
+      <p>Archivos: <code>game/main.py</code>, <code>game/api_client.py</code></p>
+
+      <h3 id="opengl">Renderizado OpenGL</h3>
+      <p>Se usa OpenGL legacy (modo inmediato) con <code>glBegin/glEnd</code>. La sala se renderiza en 3D y el HUD se superpone como una textura 2D con alpha blending.</p>
+
+      <table>
+        <thead><tr><th>Elemento</th><th>Técnica</th></tr></thead>
+        <tbody>
+          <tr><td>Sala (suelo, techo, paredes)</td><td>Quads con <code>glColor3f</code> + <code>glVertex3f</code></td></tr>
+          <tr><td>Puerta verde + marco dorado</td><td>Quads coloreados en la pared del fondo (z = -6.9)</td></tr>
+          <tr><td>Personaje animado</td><td>Quads para cabeza, torso, brazos, piernas. Animación con <code>math.sin(t * 6.0)</code></td></tr>
+          <tr><td>Antorchas</td><td>Triángulos con interpolación de color naranja→amarillo usando <code>math.sin(t * 8.0)</code></td></tr>
+          <tr><td>Baldosas del suelo</td><td>Grid de quads con pequeño margen entre ellas</td></tr>
+          <tr><td>HUD 2D</td><td>Surface pygame → textura RGBA → quad ortogonal con alpha blending</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Pipeline HUD</h3>
+      <pre><code><span class="hl-cmt"># 1. Renderizar HUD en una Surface pygame con SRCALPHA</span>
+render_hud(hud_surf, fonts, state)
+
+<span class="hl-cmt"># 2. Subir la Surface como textura OpenGL RGBA</span>
+upload_hud_texture(tex_id, hud_surf)
+
+<span class="hl-cmt"># 3. Dibujar la textura sobre un quad ortogonal 2D</span>
+draw_hud_texture(tex_id)
+<span class="hl-cmt"># → glOrtho(0, WIDTH, 0, HEIGHT, -1, 1) + GL_BLEND</span></code></pre>
+
+      <h3>Animación del personaje</h3>
+      <pre><code>cycle     = t * 6.0  <span class="hl-cmt"># frecuencia de ciclo de caminar</span>
+leg_swing = math.sin(cycle) * 0.28
+arm_swing = -math.sin(cycle) * 0.22</code></pre>
+      <p>El personaje se desplaza en el eje Z desde <code>z = 2.5</code> (cerca de la cámara) hasta <code>z = -5.5</code> (junto a la puerta). Cada respuesta correcta mueve el objetivo un paso hacia la puerta; cada fallo lo retrocede medio paso.</p>
+
+      <h3>Antorchas — efecto de parpadeo</h3>
+      <pre><code>f = 0.5 + 0.5 * math.sin(t * 8.0 + phase)  <span class="hl-cmt"># 0..1</span>
+g_c = 0.549 + 0.294 * f  <span class="hl-cmt"># interpola naranja→amarillo</span></code></pre>
+      <p>Cada antorcha tiene dos triángulos con fases distintas para un efecto más orgánico.</p>
+    </section>
+
+    <section id="dataflow">
+      <h2>Flujo de datos</h2>
+      <pre><code>Usuario                 Streamlit              Django              SQLite
+  │                        │                      │                    │
+  ├─ login ──────────────► │                      │                    │
+  │                        ├─ POST /token/ ──────► │                    │
+  │                        │ ◄── {access, refresh} │                    │
+  │                        │  (guarda en session_state)                 │
+  │                        │                      │                    │
+  ├─ selecciona room ─────► │                      │                    │
+  │                        ├─ GET /rooms/ ────────► │                    │
+  │                        │ ◄── [lista de rooms]  │                    │
+  │                        │                      │                    │
+  ├─ click "Iniciar" ─────► │                      │                    │
+  │                        ├─ subprocess.Popen(game, token, room_id)    │
+  │                        │                      │                    │
+  │              game/main.py                      │                    │
+  │                        │ GET /rooms/{id}/ ───► │ ──────────────────► │
+  │                        │ GET /rooms/{id}/questions/ ► │ ────────────► │
+  │                        │ ◄── preguntas + min_correct │               │
+  │                        │                      │                    │
+  ├─ responde preguntas ──► │ (lógica local en pygame)                   │
+  │                        │                      │                    │
+  │  (fin de partida)       │                      │                    │
+  │                        │ POST /room-sessions/ ► │ ──────────────────► │
+  │                        │ ◄── 201 Created       │                    │</code></pre>
+    </section>
+
+    <section id="decisions">
+      <h2>Decisiones de diseño</h2>
+
+      <h3>¿Por qué pygame + OpenGL en lugar de un motor 3D completo?</h3>
+      <p>
+        Un motor como Unity o Godot añadiría una dependencia externa enorme y requeriría un proceso de build separado.
+        pygame + PyOpenGL permite distribuir el juego como un script Python puro, lanzable directamente desde Streamlit
+        con <code>subprocess.Popen</code>, sin instaladores adicionales. El renderizado OpenGL legacy (glBegin/glEnd)
+        es suficiente para la sala simple que necesita el juego y es fácil de entender y modificar.
+      </p>
+
+      <h3>¿Por qué Streamlit para el dashboard?</h3>
+      <p>
+        Streamlit permite construir una interfaz web interactiva con Python puro, sin necesidad de HTML/CSS/JS
+        adicional. La gestión de estado con <code>st.session_state</code> es suficiente para el flujo de
+        autenticación y navegación. Los gráficos de Plotly se integran de forma nativa. La alternativa
+        (Django templates o React) habría requerido mucho más código de frontend.
+      </p>
+
+      <h3>¿Por qué SQLite?</h3>
+      <p>
+        SQLite elimina la necesidad de instalar y configurar un servidor de base de datos (PostgreSQL, MySQL).
+        Para un proyecto de desarrollo/demostración con un único servidor, SQLite es más que suficiente.
+        La migración a PostgreSQL en producción solo requiere cambiar <code>DATABASES</code> en <code>settings.py</code>.
+      </p>
+
+      <h3>¿Por qué JWT en lugar de sesiones de Django?</h3>
+      <p>
+        El game client (pygame) es un proceso independiente que no comparte cookies con el navegador.
+        JWT permite pasar el token como argumento de línea de comandos al proceso del juego, que lo usa
+        directamente en sus peticiones HTTP. Las sesiones de Django no funcionarían en este escenario.
+      </p>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <p>Escape Room 3D &nbsp;·&nbsp; <span>Descripción Técnica</span></p>
+</footer>
+
+</body>
+</html>

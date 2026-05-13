@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manual de Usuario — Escape Room 3D</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0a0a14;
+      --bg2:      #0d1220;
+      --gold:     #ffc832;
+      --gold-dim: #c8960c;
+      --parchment:#e8d8a0;
+      --blue:     #50a0ff;
+      --text:     #c8d8f0;
+      --border:   #ffc83244;
+      --red:      #dc4646;
+      --green:    #3cdc78;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', 'Inter', sans-serif;
+      line-height: 1.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: #07070f;
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      flex-wrap: wrap;
+    }
+    nav .brand {
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 1rem 1.5rem 1rem 0;
+      text-decoration: none;
+      border-right: 1px solid var(--border);
+      margin-right: 1rem;
+      white-space: nowrap;
+    }
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      padding: .75rem .9rem;
+      font-size: .9rem;
+      transition: color .2s;
+      white-space: nowrap;
+    }
+    nav a:hover, nav a.active { color: var(--gold); }
+
+    /* ── LAYOUT ── */
+    .page-header {
+      background: radial-gradient(ellipse at 50% 0%, #1a1430 0%, var(--bg) 70%);
+      border-bottom: 1px solid var(--border);
+      padding: 3rem 2rem 2.5rem;
+      text-align: center;
+    }
+    .page-header h1 { color: var(--gold); font-size: 2rem; margin-bottom: .4rem; }
+    .page-header p { color: var(--parchment); }
+
+    .layout { display: flex; max-width: 1100px; margin: 0 auto; }
+
+    /* ── SIDEBAR TOC ── */
+    .toc {
+      width: 240px;
+      flex-shrink: 0;
+      padding: 2rem 1rem 2rem 1.5rem;
+      position: sticky;
+      top: 57px;
+      height: calc(100vh - 57px);
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+    }
+    .toc h4 { color: var(--gold); font-size: .8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: .75rem; }
+    .toc a {
+      display: block;
+      color: var(--text);
+      text-decoration: none;
+      font-size: .85rem;
+      padding: .3rem .5rem;
+      border-radius: 6px;
+      transition: background .15s, color .15s;
+    }
+    .toc a:hover { background: var(--bg2); color: var(--gold); }
+    .toc .toc-sub { padding-left: 1rem; font-size: .8rem; color: #7090b0; }
+
+    /* ── CONTENT ── */
+    .content { flex: 1; padding: 2.5rem 2rem 5rem; min-width: 0; }
+
+    section { margin-bottom: 3.5rem; scroll-margin-top: 80px; }
+    h2 {
+      color: var(--gold);
+      font-size: 1.5rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: .4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    h3 { color: var(--parchment); font-size: 1.05rem; margin: 1.25rem 0 .5rem; }
+    p { margin-bottom: .9rem; }
+
+    /* ── CODE BLOCKS ── */
+    pre {
+      background: #060810;
+      border: 1px solid #1e2a3a;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      overflow-x: auto;
+      margin: .75rem 0 1rem;
+      font-size: .88rem;
+      line-height: 1.5;
+    }
+    code {
+      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      color: var(--blue);
+    }
+    pre code { color: #a8d8ff; }
+    .cmd { color: var(--gold); }
+    .comment { color: #4a6a4a; }
+
+    /* ── STEPS ── */
+    .steps { counter-reset: step; list-style: none; }
+    .steps li {
+      counter-increment: step;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1rem 1rem 3.5rem;
+      margin-bottom: .75rem;
+      position: relative;
+    }
+    .steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--gold-dim);
+      color: #0a0a14;
+      font-weight: 700;
+      font-size: .85rem;
+      width: 1.8rem;
+      height: 1.8rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .steps li p { margin: 0; }
+
+    /* ── INFO BOXES ── */
+    .info-box {
+      border-radius: 10px;
+      padding: .9rem 1.1rem;
+      margin: 1rem 0;
+      border-left: 3px solid;
+      font-size: .9rem;
+    }
+    .info-box.tip   { background: #0a1a0a; border-color: var(--green); color: #a0e0b0; }
+    .info-box.warn  { background: #1a1000; border-color: var(--gold);  color: var(--parchment); }
+    .info-box.error { background: #1a0808; border-color: var(--red);   color: #f0a0a0; }
+
+    /* ── CONTROLS TABLE ── */
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    th {
+      background: var(--bg2);
+      color: var(--gold);
+      text-align: left;
+      padding: .6rem .9rem;
+      font-size: .85rem;
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: .55rem .9rem;
+      border-bottom: 1px solid #1a2030;
+      font-size: .88rem;
+    }
+    tr:hover td { background: #0d1220; }
+    kbd {
+      background: #1a2030;
+      border: 1px solid #3a4a60;
+      border-radius: 4px;
+      padding: .1rem .4rem;
+      font-family: monospace;
+      font-size: .85rem;
+      color: var(--gold);
+    }
+
+    /* ── TABS ── */
+    .tab-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: .75rem;
+      margin: 1rem 0;
+    }
+    .tab-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: .9rem 1rem;
+    }
+    .tab-card .tc-name { color: var(--gold); font-weight: 700; font-size: .95rem; margin-bottom: .3rem; }
+    .tab-card .tc-desc { color: var(--text); font-size: .85rem; }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      color: #5a6a80;
+      font-size: .85rem;
+    }
+    footer span { color: var(--gold); }
+
+    @media (max-width: 768px) {
+      .toc { display: none; }
+      .content { padding: 1.5rem 1rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="index.html">🔐 Escape Room 3D</a>
+  <a href="index.html">Inicio</a>
+  <a href="user-manual.html" class="active">Manual</a>
+  <a href="technical.html">Técnico</a>
+  <a href="api-reference.html">API</a>
+  <a href="creator-guide.html">Creadores</a>
+</nav>
+
+<div class="page-header">
+  <h1>📖 Manual de Usuario</h1>
+  <p>Instalación, configuración y guía completa de uso</p>
+</div>
+
+<div class="layout">
+
+  <aside class="toc">
+    <h4>Contenido</h4>
+    <a href="#requirements">Requisitos del sistema</a>
+    <a href="#install">Instalación</a>
+    <a href="#run">Cómo ejecutar</a>
+    <a href="#dashboard">Guía del Dashboard</a>
+    <a class="toc-sub" href="#dashboard-tabs">Tabs del Dashboard</a>
+    <a href="#game">Guía del Juego</a>
+    <a class="toc-sub" href="#controls">Controles</a>
+    <a href="#troubleshoot">Solución de problemas</a>
+  </aside>
+
+  <main class="content">
+
+    <!-- Requisitos -->
+    <section id="requirements">
+      <h2>Requisitos del sistema</h2>
+      <table>
+        <thead>
+          <tr><th>Componente</th><th>Versión mínima</th><th>Notas</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Python</td><td>3.12</td><td>Requerido exactamente. pygame no es compatible con 3.14+</td></tr>
+          <tr><td>pip</td><td>23+</td><td>Incluido con Python 3.12</td></tr>
+          <tr><td>Sistema operativo</td><td>Windows 10/11</td><td>También funciona en Linux/macOS con ajustes menores</td></tr>
+          <tr><td>RAM</td><td>4 GB</td><td>8 GB recomendado para ejecutar los 3 componentes simultáneamente</td></tr>
+          <tr><td>GPU</td><td>OpenGL 2.0+</td><td>Cualquier GPU moderna es suficiente</td></tr>
+          <tr><td>Espacio en disco</td><td>~500 MB</td><td>Incluye entorno virtual y dependencias</td></tr>
+        </tbody>
+      </table>
+      <div class="info-box warn">
+        ⚠️ <strong>Importante:</strong> Usa exactamente Python 3.12. pygame no es compatible con Python 3.14 y puede presentar problemas con 3.13.
+      </div>
+    </section>
+
+    <!-- Instalación -->
+    <section id="install">
+      <h2>Instalación paso a paso</h2>
+
+      <h3>1. Clonar el repositorio</h3>
+      <pre><code><span class="cmd">git clone</span> https://github.com/tu-usuario/escape-room-3d.git
+<span class="cmd">cd</span> escape-room-3d</code></pre>
+
+      <h3>2. Crear el entorno virtual</h3>
+      <p>Desde la raíz del proyecto, crea un entorno virtual con Python 3.12:</p>
+      <pre><code><span class="cmd">py -3.12 -m venv</span> entorno311</code></pre>
+      <div class="info-box tip">
+        💡 El nombre <code>entorno311</code> es el que espera el launcher del juego. Puedes usar otro nombre, pero deberás ajustar la ruta en <code>Frontend/app.py</code>.
+      </div>
+
+      <h3>3. Activar el entorno virtual</h3>
+      <pre><code><span class="comment"># Windows (CMD)</span>
+entorno311\Scripts\activate.bat
+
+<span class="comment"># Windows (PowerShell)</span>
+entorno311\Scripts\Activate.ps1
+
+<span class="comment"># Linux / macOS</span>
+source entorno311/bin/activate</code></pre>
+
+      <h3>4. Instalar dependencias del Backend</h3>
+      <pre><code><span class="cmd">pip install</span> -r Backend/req.txt</code></pre>
+
+      <h3>5. Instalar dependencias del juego</h3>
+      <pre><code><span class="cmd">pip install</span> -r game/requirements.txt</code></pre>
+
+      <h3>6. Instalar dependencias del Frontend</h3>
+      <pre><code><span class="cmd">pip install</span> -r Frontend/requirements.txt</code></pre>
+
+      <h3>7. Aplicar migraciones de base de datos</h3>
+      <pre><code><span class="cmd">cd</span> Backend/EscapeRoomPy
+<span class="cmd">py manage.py</span> migrate</code></pre>
+
+      <h3>8. Crear superusuario (administrador)</h3>
+      <pre><code><span class="cmd">py manage.py</span> createsuperuser</code></pre>
+      <p>Sigue las instrucciones en pantalla para definir nombre de usuario, email y contraseña del administrador.</p>
+
+      <div class="info-box tip">
+        💡 El superusuario tiene acceso al panel de administración en <code>http://localhost:8000/admin/</code> y al endpoint <code>/admin-stats/</code>.
+      </div>
+    </section>
+
+    <!-- Cómo ejecutar -->
+    <section id="run">
+      <h2>Cómo ejecutar</h2>
+      <p>Los tres componentes deben ejecutarse en terminales separadas con el entorno virtual activado.</p>
+
+      <h3>Backend (Django)</h3>
+      <pre><code><span class="comment"># Desde la carpeta Backend/EscapeRoomPy/</span>
+<span class="cmd">py manage.py</span> runserver</code></pre>
+      <p>El servidor quedará disponible en <code>http://localhost:8000</code>. Déjalo corriendo mientras usas el dashboard o el juego.</p>
+
+      <h3>Frontend (Streamlit)</h3>
+      <pre><code><span class="comment"># Desde la raíz del proyecto</span>
+<span class="cmd">streamlit run</span> Frontend/app.py</code></pre>
+      <p>Se abrirá automáticamente en el navegador en <code>http://localhost:8501</code>.</p>
+
+      <h3>Juego (pygame)</h3>
+      <p>El juego <strong>no se lanza directamente</strong>. Se inicia desde el botón <strong>"▶ Iniciar Juego"</strong> en el tab <em>Jugar</em> del dashboard. Streamlit pasa automáticamente el token JWT y el nombre de usuario al proceso del juego.</p>
+
+      <div class="info-box warn">
+        ⚠️ El backend Django debe estar corriendo <strong>antes</strong> de iniciar el dashboard o el juego. Sin él, la autenticación y la carga de preguntas fallarán.
+      </div>
+    </section>
+
+    <!-- Dashboard -->
+    <section id="dashboard">
+      <h2>Guía de uso del Dashboard</h2>
+
+      <h3>Registro e inicio de sesión</h3>
+      <p>Al abrir el dashboard verás dos tabs: <strong>Iniciar Sesión</strong> y <strong>Registrarse</strong>.</p>
+      <ul style="margin: .5rem 0 1rem 1.5rem; color: var(--text);">
+        <li>Para registrarte: introduce un nombre de usuario, email y contraseña, luego haz clic en <em>Crear cuenta</em>.</li>
+        <li>Para iniciar sesión: introduce tu usuario y contraseña, luego haz clic en <em>Entrar</em>.</li>
+      </ul>
+      <p>Una vez autenticado, el token JWT se almacena en <code>st.session_state</code> y se renueva automáticamente cuando expira.</p>
+
+      <h3 id="dashboard-tabs">Tabs del Dashboard</h3>
+      <div class="tab-grid">
+        <div class="tab-card">
+          <div class="tc-name">🎮 Jugar</div>
+          <div class="tc-desc">Lanza el juego en modo clásico (elige dificultad) o selecciona una Room del catálogo para jugarla.</div>
+        </div>
+        <div class="tab-card">
+          <div class="tc-name">🗺️ Catálogo</div>
+          <div class="tc-desc">Explora todas las Rooms publicadas. Filtra por dificultad. Cada card muestra título, descripción, creador y número de preguntas.</div>
+        </div>
+        <div class="tab-card">
+          <div class="tc-name">⚒️ Creator Studio</div>
+          <div class="tc-desc">Crea y gestiona tus propias Rooms. Añade preguntas, publica al catálogo o elimina rooms en borrador.</div>
+        </div>
+        <div class="tab-card">
+          <div class="tc-name">📜 Mis Sesiones</div>
+          <div class="tc-desc">Historial completo de tus partidas: fecha, tiempo, preguntas respondidas, aciertos y si completaste la sala.</div>
+        </div>
+        <div class="tab-card">
+          <div class="tc-name">🏆 Tablero</div>
+          <div class="tc-desc">Top 10 de mejores tiempos en el modo clásico. Visible para todos los usuarios.</div>
+        </div>
+        <div class="tab-card">
+          <div class="tc-name">📊 Estadísticas</div>
+          <div class="tc-desc">Gráficos interactivos de tus partidas: distribución por dificultad, evolución del tiempo, tasa de aciertos.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Juego -->
+    <section id="game">
+      <h2>Guía del juego (pygame)</h2>
+      <p>
+        Al hacer clic en <em>Iniciar Juego</em>, se abre una ventana de <strong>900 × 650 px</strong> con la sala 3D.
+        Primero verás la pantalla de título con el nombre de la sala; presiona cualquier tecla para comenzar.
+      </p>
+
+      <h3 id="controls">Controles</h3>
+      <table>
+        <thead>
+          <tr><th>Tecla</th><th>Acción</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><kbd>1</kbd></td><td>Seleccionar opción A (primera respuesta)</td></tr>
+          <tr><td><kbd>2</kbd></td><td>Seleccionar opción B (segunda respuesta)</td></tr>
+          <tr><td><kbd>3</kbd></td><td>Seleccionar opción C (tercera respuesta)</td></tr>
+          <tr><td><kbd>4</kbd></td><td>Seleccionar opción D (cuarta respuesta)</td></tr>
+          <tr><td><kbd>ESC</kbd></td><td>Salir del juego en cualquier momento</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Objetivo</h3>
+      <p>
+        Responde correctamente el <strong>mínimo de preguntas</strong> requerido para escapar.
+        El número mínimo se muestra en el HUD inferior (<em>necesitas X/Y</em>).
+        El personaje avanza hacia la puerta verde con cada acierto y retrocede con cada fallo.
+      </p>
+
+      <h3>HUD (interfaz en pantalla)</h3>
+      <ul style="margin: .5rem 0 1rem 1.5rem; color: var(--text);">
+        <li><strong style="color:var(--gold)">Barra superior:</strong> nombre de la sala, número de pregunta, barra de progreso y cronómetro.</li>
+        <li><strong style="color:var(--gold)">Barra de vida (❤):</strong> muestra cuántos aciertos llevas respecto al mínimo requerido. Verde = suficiente, amarillo = cerca, rojo = insuficiente.</li>
+        <li><strong style="color:var(--gold)">Panel inferior:</strong> texto de la pregunta y las 4 opciones de respuesta.</li>
+        <li><strong style="color:var(--gold)">Feedback:</strong> mensaje verde "✓ ¡Correcto!" o rojo "✗ Era: [respuesta]" tras cada respuesta.</li>
+      </ul>
+
+      <h3>Pantalla de fin</h3>
+      <p>
+        Al responder todas las preguntas, aparece la pantalla de resultado durante 4 segundos antes de cerrarse.
+        Tu tiempo y puntaje se guardan automáticamente en el servidor.
+      </p>
+      <ul style="margin: .5rem 0 1rem 1.5rem; color: var(--text);">
+        <li><strong style="color:var(--green)">ESCAPASTE:</strong> respondiste correctamente al menos el mínimo requerido.</li>
+        <li><strong style="color:var(--red)">ATRAPADO:</strong> no alcanzaste el mínimo de respuestas correctas.</li>
+      </ul>
+    </section>
+
+    <!-- Troubleshooting -->
+    <section id="troubleshoot">
+      <h2>Solución de problemas comunes</h2>
+
+      <h3>Error de conexión al iniciar sesión</h3>
+      <div class="info-box error">
+        🔌 <strong>"No se puede conectar al servidor"</strong> — Django no está corriendo. Abre una terminal, activa el entorno virtual y ejecuta <code>py manage.py runserver</code> desde <code>Backend/EscapeRoomPy/</code>.
+      </div>
+
+      <h3>Token expirado / sesión cerrada automáticamente</h3>
+      <div class="info-box warn">
+        ⏰ <strong>"Tu sesión expiró"</strong> — El access token dura 8 horas. El dashboard intenta renovarlo automáticamente con el refresh token (7 días). Si el mensaje persiste, cierra sesión y vuelve a entrar.
+      </div>
+
+      <h3>La ventana del juego se cierra inmediatamente</h3>
+      <div class="info-box error">
+        🎮 Revisa el archivo <code>game/game_error.log</code> para ver el traceback completo. Las causas más comunes son:
+        <ul style="margin: .5rem 0 0 1.5rem;">
+          <li>Python incorrecto (no 3.12) — verifica con <code>py --version</code></li>
+          <li>pygame o PyOpenGL no instalados en el entorno virtual activo</li>
+          <li>El backend no está corriendo (no puede cargar las preguntas)</li>
+        </ul>
+      </div>
+
+      <h3>Error de pygame con Python 3.14+</h3>
+      <div class="info-box error">
+        🐍 pygame no es compatible con Python 3.14. Usa exactamente <strong>Python 3.12</strong>. Crea el entorno con <code>py -3.12 -m venv entorno311</code>.
+      </div>
+
+      <h3>Las migraciones fallan</h3>
+      <div class="info-box warn">
+        🗄️ Asegúrate de estar dentro de <code>Backend/EscapeRoomPy/</code> al ejecutar <code>py manage.py migrate</code>. Si hay conflictos, prueba con <code>py manage.py migrate --run-syncdb</code>.
+      </div>
+
+      <h3>Streamlit no encuentra el módulo</h3>
+      <div class="info-box warn">
+        📦 Verifica que el entorno virtual esté activado antes de ejecutar <code>streamlit run Frontend/app.py</code>. El comando <code>streamlit</code> debe estar en el PATH del entorno virtual.
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <p>Escape Room 3D &nbsp;·&nbsp; <span>Manual de Usuario</span></p>
+</footer>
+
+</body>
+</html>

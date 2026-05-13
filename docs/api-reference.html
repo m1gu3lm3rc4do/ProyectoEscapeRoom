@@ -1,0 +1,409 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Referencia API REST — Escape Room 3D</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#0a0a14;--bg2:#0d1220;--gold:#ffc832;--gold-dim:#c8960c;--parchment:#e8d8a0;--blue:#50a0ff;--text:#c8d8f0;--border:#ffc83244;--red:#dc4646;--green:#3cdc78}
+    body{background:var(--bg);color:var(--text);font-family:'Segoe UI','Inter',sans-serif;line-height:1.6}
+    nav{background:#07070f;border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;position:sticky;top:0;z-index:100;flex-wrap:wrap}
+    nav .brand{color:var(--gold);font-weight:700;font-size:1.1rem;padding:1rem 1.5rem 1rem 0;text-decoration:none;border-right:1px solid var(--border);margin-right:1rem;white-space:nowrap}
+    nav a{color:var(--text);text-decoration:none;padding:.75rem .9rem;font-size:.9rem;transition:color .2s;white-space:nowrap}
+    nav a:hover,nav a.active{color:var(--gold)}
+    .page-header{background:radial-gradient(ellipse at 50% 0%,#1a1430 0%,var(--bg) 70%);border-bottom:1px solid var(--border);padding:3rem 2rem 2.5rem;text-align:center}
+    .page-header h1{color:var(--gold);font-size:2rem;margin-bottom:.4rem}
+    .page-header p{color:var(--parchment)}
+    .layout{display:flex;max-width:1200px;margin:0 auto}
+    .toc{width:220px;flex-shrink:0;padding:2rem 1rem 2rem 1.5rem;position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto;border-right:1px solid var(--border)}
+    .toc h4{color:var(--gold);font-size:.8rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:.75rem}
+    .toc a{display:block;color:var(--text);text-decoration:none;font-size:.82rem;padding:.28rem .5rem;border-radius:6px;transition:background .15s,color .15s}
+    .toc a:hover{background:var(--bg2);color:var(--gold)}
+    .toc .toc-sub{padding-left:1rem;font-size:.78rem;color:#7090b0}
+    .content{flex:1;padding:2.5rem 2rem 5rem;min-width:0}
+    section{margin-bottom:3.5rem;scroll-margin-top:80px}
+    h2{color:var(--gold);font-size:1.5rem;margin-bottom:1.25rem;padding-bottom:.4rem;border-bottom:1px solid var(--border)}
+    h3{color:var(--parchment);font-size:1.05rem;margin:1.5rem 0 .6rem}
+    p{margin-bottom:.9rem}
+    .ep-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}
+    .ep-table th{background:var(--bg2);color:var(--gold);text-align:left;padding:.6rem .8rem;border-bottom:1px solid var(--border)}
+    .ep-table td{padding:.5rem .8rem;border-bottom:1px solid #1a2030;vertical-align:top}
+    .ep-table tr:hover td{background:#0d1220}
+    .method{display:inline-block;padding:.15rem .5rem;border-radius:4px;font-weight:700;font-size:.78rem;font-family:monospace;min-width:52px;text-align:center}
+    .get{background:#0a2a0a;color:#3cdc78;border:1px solid #1a4a1a}
+    .post{background:#0a1a2a;color:#50a0ff;border:1px solid #1a3a5a}
+    .put{background:#2a1a00;color:#ffc832;border:1px solid #4a3a00}
+    .patch{background:#1a1a00;color:#e0d060;border:1px solid #3a3a00}
+    .delete{background:#2a0a0a;color:#dc4646;border:1px solid #4a1a1a}
+    .auth-badge{display:inline-block;padding:.1rem .45rem;border-radius:4px;font-size:.75rem;font-weight:600}
+    .auth-yes{background:#1a0a2a;color:#c080ff;border:1px solid #3a1a5a}
+    .auth-no{background:#0a1a0a;color:#60c060;border:1px solid #1a3a1a}
+    .auth-admin{background:#2a1000;color:#ff9040;border:1px solid #5a2a00}
+    code{font-family:'Cascadia Code','Fira Code','Consolas',monospace;color:var(--blue);font-size:.88em}
+    pre{background:#060810;border:1px solid #1e2a3a;border-radius:10px;padding:1rem 1.25rem;overflow-x:auto;margin:.75rem 0 1rem;font-size:.85rem;line-height:1.6}
+    pre code{color:#a8d8ff}
+    .status-table{width:100%;border-collapse:collapse;margin:1rem 0}
+    .status-table th{background:var(--bg2);color:var(--gold);text-align:left;padding:.6rem .9rem;font-size:.85rem;border-bottom:1px solid var(--border)}
+    .status-table td{padding:.5rem .9rem;border-bottom:1px solid #1a2030;font-size:.88rem}
+    .status-table tr:hover td{background:#0d1220}
+    .sc{font-weight:700;font-family:monospace}
+    .sc-2xx{color:var(--green)}.sc-4xx{color:var(--red)}.sc-5xx{color:#ff8040}
+    footer{text-align:center;padding:2rem;border-top:1px solid var(--border);color:#5a6a80;font-size:.85rem}
+    footer span{color:var(--gold)}
+    @media(max-width:768px){.toc{display:none}.content{padding:1.5rem 1rem 4rem}}
+  </style>
+</head>
+<body>
+<nav>
+  <a class="brand" href="index.html">&#128272; Escape Room 3D</a>
+  <a href="index.html">Inicio</a>
+  <a href="user-manual.html">Manual</a>
+  <a href="technical.html">T&#233;cnico</a>
+  <a href="api-reference.html" class="active">API</a>
+  <a href="creator-guide.html">Creadores</a>
+</nav>
+<div class="page-header">
+  <h1>&#128268; Referencia API REST</h1>
+  <p>Todos los endpoints, m&#233;todos, autenticaci&#243;n y c&#243;digos de respuesta</p>
+</div>
+<div class="layout">
+  <aside class="toc">
+    <h4>Contenido</h4>
+    <a href="#overview">Resumen</a>
+    <a href="#auth-ep">Autenticaci&#243;n</a>
+    <a href="#users-ep">Usuarios</a>
+    <a href="#sessions-ep">Sesiones cl&#225;sicas</a>
+    <a href="#rooms-ep">Rooms</a>
+    <a class="toc-sub" href="#rooms-actions">Acciones de Room</a>
+    <a href="#questions-ep">Questions</a>
+    <a href="#room-sessions-ep">Room Sessions</a>
+    <a href="#errors">C&#243;digos de error</a>
+  </aside>
+  <main class="content">
+
+    <section id="overview">
+      <h2>Resumen</h2>
+      <p>La API REST de Escape Room 3D corre en <code>http://localhost:8000</code>. Todos los endpoints devuelven JSON. La autenticación usa JWT Bearer tokens.</p>
+      <table class="ep-table">
+        <thead><tr><th>Leyenda</th><th>Significado</th></tr></thead>
+        <tbody>
+          <tr><td><span class="auth-badge auth-no">Público</span></td><td>No requiere autenticación</td></tr>
+          <tr><td><span class="auth-badge auth-yes">JWT</span></td><td>Requiere header <code>Authorization: Bearer &lt;token&gt;</code></td></tr>
+          <tr><td><span class="auth-badge auth-admin">Admin</span></td><td>Solo superusuarios Django</td></tr>
+        </tbody>
+      </table>
+      <p>Base URL: <code>http://localhost:8000/</code></p>
+    </section>
+
+    <section id="auth-ep">
+      <h2>Autenticación</h2>
+      <table class="ep-table">
+        <thead><tr><th>Método</th><th>Ruta</th><th>Auth</th><th>Descripción</th><th>Respuesta</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="method post">POST</span></td>
+            <td><code>/token/</code></td>
+            <td><span class="auth-badge auth-no">Público</span></td>
+            <td>Obtener par de tokens JWT. Body: <code>{username, password}</code></td>
+            <td>200: <code>{access, refresh}</code> / 401: credenciales inválidas</td>
+          </tr>
+          <tr>
+            <td><span class="method post">POST</span></td>
+            <td><code>/token/refresh/</code></td>
+            <td><span class="auth-badge auth-no">Público</span></td>
+            <td>Renovar access token. Body: <code>{refresh}</code></td>
+            <td>200: <code>{access}</code> / 401: refresh inválido o expirado</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Ejemplo de login</h3>
+      <pre><code>POST /token/
+Content-Type: application/json
+
+{
+  "username": "mi_usuario",
+  "password": "mi_contrasena"
+}
+
+// Respuesta 200
+{
+  "access":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}</code></pre>
+    </section>
+
+    <section id="users-ep">
+      <h2>Usuarios</h2>
+      <table class="ep-table">
+        <thead><tr><th>Método</th><th>Ruta</th><th>Auth</th><th>Descripción</th><th>Respuesta</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="method get">GET</span></td>
+            <td><code>/users/</code></td>
+            <td><span class="auth-badge auth-no">Público</span></td>
+            <td>Listar todos los usuarios</td>
+            <td>200: array de usuarios</td>
+          </tr>
+          <tr>
+            <td><span class="method post">POST</span></td>
+            <td><code>/users/</code></td>
+            <td><span class="auth-badge auth-no">Público</span></td>
+            <td>Crear nuevo usuario. Body: <code>{username, email, password}</code></td>
+            <td>201: usuario creado / 400: datos inválidos</td>
+          </tr>
+          <tr>
+            <td><span class="method get">GET</span></td>
+            <td><code>/users/{id}/</code></td>
+            <td><span class="auth-badge auth-no">Público</span></td>
+            <td>Detalle de un usuario por ID</td>
+            <td>200: usuario / 404: no encontrado</td>
+          </tr>
+          <tr>
+            <td><span class="method put">PUT</span></td>
+            <td><code>/users/{id}/</code></td>
+            <td><span class="auth-badge auth-no">Público</span></td>
+            <td>Actualizar usuario completo</td>
+            <td>200: usuario actualizado / 400: datos inválidos</td>
+          </tr>
+          <tr>
+            <td><span class="method delete">DELETE</span></td>
+            <td><code>/users/{id}/</code></td>
+            <td><span class="auth-badge auth-no">Público</span></td>
+            <td>Eliminar usuario</td>
+            <td>204: eliminado / 404: no encontrado</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="sessions-ep">
+      <h2>Sesiones clásicas (GameSession)</h2>
+      <p>Sesiones del modo clásico con preguntas predefinidas.</p>
+      <table class="ep-table">
+        <thead><tr><th>Método</th><th>Ruta</th><th>Auth</th><th>Descripción</th><th>Respuesta</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="method get">GET</span></td>
+            <td><code>/sessions/</code></td>
+            <td><span class="auth-badge auth-yes">JWT</span></td>
+            <td>Listar todas las sesiones</td>
+            <td>200: array de sesiones</td>
+          </tr>
+          <tr>
+            <td><span class="method post">POST</span></td>
+            <td><code>/sessions/</code></td>
+            <td><span class="auth-badge auth-yes">JWT</span></td>
+            <td>Registrar nueva sesión. Body: <code>{user, difficulty, time_taken, questions_answered, correct_answers, completed}</code></td>
+            <td>201: sesión creada / 400: datos inválidos</td>
+          </tr>
+          <tr>
+            <td><span class="method get">GET</span></td>
+            <td><code>/leaderboard/</code></td>
+            <td><span class="auth-badge auth-no">Público</span></td>
+            <td>Top 10 mejores tiempos (solo sesiones completadas, ordenadas por tiempo)</td>
+            <td>200: array de <code>{username, time_taken, difficulty, correct_answers}</code></td>
+          </tr>
+          <tr>
+            <td><span class="method get">GET</span></td>
+            <td><code>/admin-stats/</code></td>
+            <td><span class="auth-badge auth-admin">Admin</span></td>
+            <td>Estadísticas globales: total de partidas, tiempo promedio, conteo por dificultad</td>
+            <td>200: <code>{total_games, avg_time, easy, medium, hard}</code> / 403: no admin</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="rooms-ep">
+      <h2>Rooms</h2>
+      <p>Rooms son las salas de escape personalizadas creadas por los usuarios.</p>
+      <table class="ep-table">
+        <thead><tr><th>Método</th><th>Ruta</th><th>Auth</th><th>Descripción</th><th>Respuesta</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="method get">GET</span></td>
+            <td><code>/rooms/</code></td>
+            <td><span class="auth-badge auth-no">Público</span></td>
+            <td>Catálogo de rooms publicadas. Filtro opcional: <code>?difficulty=easy|medium|hard</code>. Usuarios autenticados también ven sus propias rooms en borrador.</td>
+            <td>200: array de rooms</td>
+          </tr>
+          <tr>
+            <td><span class="method post">POST</span></td>
+            <td><code>/rooms/</code></td>
+            <td><span class="auth-badge auth-yes">JWT</span></td>
+            <td>Crear nueva room. Body: <code>{title, description, difficulty, min_correct}</code>. El creador se asigna automáticamente.</td>
+            <td>201: room creada / 400: datos inválidos</td>
+          </tr>
+          <tr>
+            <td><span class="method get">GET</span></td>
+            <td><code>/rooms/{id}/</code></td>
+            <td><span class="auth-badge auth-no">Público</span></td>
+            <td>Detalle de una room. Las preguntas no incluyen <code>correct_index</code> para usuarios no autenticados.</td>
+            <td>200: room / 404: no encontrada</td>
+          </tr>
+          <tr>
+            <td><span class="method put">PUT</span></td>
+            <td><code>/rooms/{id}/</code></td>
+            <td><span class="auth-badge auth-yes">JWT</span></td>
+            <td>Actualizar room completa. Solo el propietario puede modificarla.</td>
+            <td>200: room actualizada / 403: no propietario / 404: no encontrada</td>
+          </tr>
+          <tr>
+            <td><span class="method patch">PATCH</span></td>
+            <td><code>/rooms/{id}/</code></td>
+            <td><span class="auth-badge auth-yes">JWT</span></td>
+            <td>Actualizar campos parciales de la room.</td>
+            <td>200: room actualizada / 403: no propietario</td>
+          </tr>
+          <tr>
+            <td><span class="method delete">DELETE</span></td>
+            <td><code>/rooms/{id}/</code></td>
+            <td><span class="auth-badge auth-yes">JWT</span></td>
+            <td>Eliminar room. No se puede eliminar una room publicada que ya tiene sesiones de juego.</td>
+            <td>204: eliminada / 403: no propietario / 409: tiene sesiones</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 id="rooms-actions">Acciones especiales de Room</h3>
+      <table class="ep-table">
+        <thead><tr><th>Método</th><th>Ruta</th><th>Auth</th><th>Descripción</th><th>Respuesta</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="method post">POST</span></td>
+            <td><code>/rooms/{id}/publish/</code></td>
+            <td><span class="auth-badge auth-yes">JWT</span></td>
+            <td>Publicar room en el catálogo. Requiere entre 4 y 62 preguntas. Solo el propietario puede publicar.</td>
+            <td>200: room publicada / 400: preguntas insuficientes / 403: no propietario</td>
+          </tr>
+          <tr>
+            <td><span class="method get">GET</span></td>
+            <td><code>/rooms/{id}/questions/</code></td>
+            <td><span class="auth-badge auth-yes">JWT</span></td>
+            <td>Obtener todas las preguntas de la room <strong>con</strong> <code>correct_index</code>. Usado por el game client para cargar la partida.</td>
+            <td>200: array de preguntas completas / 401: no autenticado</td>
+          </tr>
+          <tr>
+            <td><span class="method get">GET</span></td>
+            <td><code>/rooms/{id}/stats/</code></td>
+            <td><span class="auth-badge auth-yes">JWT</span></td>
+            <td>Estadísticas de la room: total de partidas, tiempo promedio, tasa de completado. Solo el propietario puede ver las estadísticas.</td>
+            <td>200: <code>{total_games, avg_time, completion_rate}</code> / 403: no propietario</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="questions-ep">
+      <h2>Questions</h2>
+      <p>Preguntas asociadas a una Room. Solo el creador puede ver y modificar sus propias preguntas.</p>
+      <table class="ep-table">
+        <thead><tr><th>Método</th><th>Ruta</th><th>Auth</th><th>Descripción</th><th>Respuesta</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="method get">GET</span></td>
+            <td><code>/questions/</code></td>
+            <td><span class="auth-badge auth-yes">JWT</span></td>
+            <td>Listar preguntas propias (filtradas por el usuario autenticado)</td>
+            <td>200: array de preguntas</td>
+          </tr>
+          <tr>
+            <td><span class="method post">POST</span></td>
+            <td><code>/questions/</code></td>
+            <td><span class="auth-badge auth-yes">JWT</span></td>
+            <td>Crear nueva pregunta. Body: <code>{room, text, option_0, option_1, option_2, option_3, correct_index}</code></td>
+            <td>201: pregunta creada / 400: datos inválidos</td>
+          </tr>
+          <tr>
+            <td><span class="method get">GET</span></td>
+            <td><code>/questions/{id}/</code></td>
+            <td><span class="auth-badge auth-yes">JWT</span></td>
+            <td>Detalle de una pregunta propia</td>
+            <td>200: pregunta / 403: no propietario / 404: no encontrada</td>
+          </tr>
+          <tr>
+            <td><span class="method put">PUT</span></td>
+            <td><code>/questions/{id}/</code></td>
+            <td><span class="auth-badge auth-yes">JWT</span></td>
+            <td>Actualizar pregunta completa</td>
+            <td>200: pregunta actualizada / 403: no propietario</td>
+          </tr>
+          <tr>
+            <td><span class="method delete">DELETE</span></td>
+            <td><code>/questions/{id}/</code></td>
+            <td><span class="auth-badge auth-yes">JWT</span></td>
+            <td>Eliminar pregunta</td>
+            <td>204: eliminada / 403: no propietario</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Validaciones de Question</h3>
+      <ul style="margin:.5rem 0 1rem 1.5rem;color:var(--text);font-size:.9rem;">
+        <li><code>text</code>: no puede estar vacío, máximo 500 caracteres</li>
+        <li><code>correct_index</code>: debe ser 0, 1, 2 o 3</li>
+        <li><code>option_0</code> … <code>option_3</code>: máximo 200 caracteres cada uno</li>
+      </ul>
+    </section>
+
+    <section id="room-sessions-ep">
+      <h2>Room Sessions</h2>
+      <p>Historial de partidas jugadas en rooms personalizadas.</p>
+      <table class="ep-table">
+        <thead><tr><th>Método</th><th>Ruta</th><th>Auth</th><th>Descripción</th><th>Respuesta</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="method get">GET</span></td>
+            <td><code>/room-sessions/</code></td>
+            <td><span class="auth-badge auth-yes">JWT</span></td>
+            <td>Historial de sesiones del usuario autenticado, ordenadas por fecha descendente</td>
+            <td>200: array de sesiones con <code>room_title</code> y <code>user</code></td>
+          </tr>
+          <tr>
+            <td><span class="method post">POST</span></td>
+            <td><code>/room-sessions/</code></td>
+            <td><span class="auth-badge auth-yes">JWT</span></td>
+            <td>Registrar sesión de room. Body: <code>{room, time_taken, questions_answered, correct_answers, completed}</code>. El usuario se asigna automáticamente.</td>
+            <td>201: sesión creada / 400: datos inválidos</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="errors">
+      <h2>Códigos de error</h2>
+      <table class="status-table">
+        <thead><tr><th>Código</th><th>Nombre</th><th>Cuándo ocurre</th></tr></thead>
+        <tbody>
+          <tr><td><span class="sc sc-2xx">200</span></td><td>OK</td><td>Petición exitosa (GET, PUT, PATCH, acciones personalizadas)</td></tr>
+          <tr><td><span class="sc sc-2xx">201</span></td><td>Created</td><td>Recurso creado exitosamente (POST)</td></tr>
+          <tr><td><span class="sc sc-2xx">204</span></td><td>No Content</td><td>Recurso eliminado exitosamente (DELETE)</td></tr>
+          <tr><td><span class="sc sc-4xx">400</span></td><td>Bad Request</td><td>Datos de entrada inválidos (validación fallida, campos requeridos faltantes, preguntas insuficientes para publicar)</td></tr>
+          <tr><td><span class="sc sc-4xx">401</span></td><td>Unauthorized</td><td>Token JWT ausente, inválido o expirado. Credenciales incorrectas en <code>/token/</code></td></tr>
+          <tr><td><span class="sc sc-4xx">403</span></td><td>Forbidden</td><td>El usuario autenticado no tiene permiso para la operación (no es propietario, no es admin)</td></tr>
+          <tr><td><span class="sc sc-4xx">404</span></td><td>Not Found</td><td>El recurso solicitado no existe</td></tr>
+          <tr><td><span class="sc sc-4xx">409</span></td><td>Conflict</td><td>Conflicto de estado: intentar eliminar una room publicada que ya tiene sesiones de juego</td></tr>
+        </tbody>
+      </table>
+      <h3>Formato de error</h3>
+      <pre><code>// Error de validación (400)
+{
+  "title": ["El título no puede superar los 100 caracteres."],
+  "difficulty": ["La dificultad debe ser 'easy', 'medium' o 'hard'."]
+}
+
+// Error de permiso (403) o conflicto (409)
+{
+  "detail": "No se puede eliminar una Room publicada que ya tiene sesiones de juego."
+}</code></pre>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <p>Escape Room 3D &nbsp;&middot;&nbsp; <span>Referencia API REST</span></p>
+</footer>
+
+</body>
+</html>

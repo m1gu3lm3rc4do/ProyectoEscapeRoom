@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guía del Creator — Escape Room 3D</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#0a0a14;--bg2:#0d1220;--gold:#ffc832;--gold-dim:#c8960c;--parchment:#e8d8a0;--blue:#50a0ff;--text:#c8d8f0;--border:#ffc83244;--red:#dc4646;--green:#3cdc78}
+    body{background:var(--bg);color:var(--text);font-family:'Segoe UI','Inter',sans-serif;line-height:1.6}
+    nav{background:#07070f;border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;position:sticky;top:0;z-index:100;flex-wrap:wrap}
+    nav .brand{color:var(--gold);font-weight:700;font-size:1.1rem;padding:1rem 1.5rem 1rem 0;text-decoration:none;border-right:1px solid var(--border);margin-right:1rem;white-space:nowrap}
+    nav a{color:var(--text);text-decoration:none;padding:.75rem .9rem;font-size:.9rem;transition:color .2s;white-space:nowrap}
+    nav a:hover,nav a.active{color:var(--gold)}
+    .page-header{background:radial-gradient(ellipse at 50% 0%,#1a1430 0%,var(--bg) 70%);border-bottom:1px solid var(--border);padding:3rem 2rem 2.5rem;text-align:center}
+    .page-header h1{color:var(--gold);font-size:2rem;margin-bottom:.4rem}
+    .page-header p{color:var(--parchment)}
+    .layout{display:flex;max-width:1100px;margin:0 auto}
+    .toc{width:240px;flex-shrink:0;padding:2rem 1rem 2rem 1.5rem;position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto;border-right:1px solid var(--border)}
+    .toc h4{color:var(--gold);font-size:.8rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:.75rem}
+    .toc a{display:block;color:var(--text);text-decoration:none;font-size:.85rem;padding:.3rem .5rem;border-radius:6px;transition:background .15s,color .15s}
+    .toc a:hover{background:var(--bg2);color:var(--gold)}
+    .toc .toc-sub{padding-left:1rem;font-size:.8rem;color:#7090b0}
+    .content{flex:1;padding:2.5rem 2rem 5rem;min-width:0}
+    section{margin-bottom:3.5rem;scroll-margin-top:80px}
+    h2{color:var(--gold);font-size:1.5rem;margin-bottom:1.25rem;padding-bottom:.4rem;border-bottom:1px solid var(--border)}
+    h3{color:var(--parchment);font-size:1.05rem;margin:1.25rem 0 .5rem}
+    p{margin-bottom:.9rem}
+    pre{background:#060810;border:1px solid #1e2a3a;border-radius:10px;padding:1rem 1.25rem;overflow-x:auto;margin:.75rem 0 1rem;font-size:.85rem;line-height:1.6}
+    code{font-family:'Cascadia Code','Fira Code','Consolas',monospace;color:var(--blue);font-size:.88em}
+    pre code{color:#a8d8ff}
+    .step-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.25rem;position:relative;padding-left:4.5rem}
+    .step-num{position:absolute;left:1.25rem;top:1.5rem;background:var(--gold-dim);color:#0a0a14;font-weight:700;font-size:1rem;width:2rem;height:2rem;border-radius:50%;display:flex;align-items:center;justify-content:center}
+    .step-card h3{color:var(--gold);margin:0 0 .6rem}
+    .step-card p{margin-bottom:.5rem}
+    .field-list{list-style:none;margin:.5rem 0}
+    .field-list li{padding:.4rem .6rem;border-bottom:1px solid #1a2030;font-size:.88rem;display:flex;gap:.75rem;align-items:flex-start}
+    .field-list li:last-child{border-bottom:none}
+    .field-name{color:var(--gold);font-family:monospace;font-size:.85rem;min-width:140px;flex-shrink:0}
+    .field-desc{color:var(--text)}
+    .diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1rem 0}
+    .diff-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center}
+    .diff-card .diff-icon{font-size:1.8rem;display:block;margin-bottom:.4rem}
+    .diff-card .diff-name{color:var(--gold);font-weight:700;font-size:.95rem}
+    .diff-card .diff-desc{color:var(--text);font-size:.82rem;margin-top:.3rem}
+    .info-box{border-radius:10px;padding:.9rem 1.1rem;margin:1rem 0;border-left:3px solid;font-size:.9rem}
+    .info-box.tip{background:#0a1a0a;border-color:var(--green);color:#a0e0b0}
+    .info-box.warn{background:#1a1000;border-color:var(--gold);color:var(--parchment)}
+    .info-box.error{background:#1a0808;border-color:var(--red);color:#f0a0a0}
+    .rules-list{list-style:none;margin:.5rem 0}
+    .rules-list li{padding:.6rem .8rem;border-bottom:1px solid #1a2030;font-size:.9rem;display:flex;gap:.75rem;align-items:flex-start}
+    .rules-list li:last-child{border-bottom:none}
+    .rules-list .ri{font-size:1.1rem;flex-shrink:0}
+    table{width:100%;border-collapse:collapse;margin:1rem 0}
+    th{background:var(--bg2);color:var(--gold);text-align:left;padding:.6rem .9rem;font-size:.85rem;border-bottom:1px solid var(--border)}
+    td{padding:.55rem .9rem;border-bottom:1px solid #1a2030;font-size:.88rem;vertical-align:top}
+    tr:hover td{background:#0d1220}
+    footer{text-align:center;padding:2rem;border-top:1px solid var(--border);color:#5a6a80;font-size:.85rem}
+    footer span{color:var(--gold)}
+    @media(max-width:768px){.toc{display:none}.content{padding:1.5rem 1rem 4rem}.diff-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="index.html">🔐 Escape Room 3D</a>
+  <a href="index.html">Inicio</a>
+  <a href="user-manual.html">Manual</a>
+  <a href="technical.html">Técnico</a>
+  <a href="api-reference.html">API</a>
+  <a href="creator-guide.html" class="active">Creadores</a>
+</nav>
+
+<div class="page-header">
+  <h1>⚒️ Guía del Creator</h1>
+  <p>Crea, configura y publica tus propias Escape Rooms</p>
+</div>
+
+<div class="layout">
+  <aside class="toc">
+    <h4>Contenido</h4>
+    <a href="#what-is">¿Qué es el Creator Mode?</a>
+    <a href="#step1">Paso 1: Iniciar sesión</a>
+    <a href="#step2">Paso 2: Creator Studio</a>
+    <a href="#step3">Paso 3: Crear una Room</a>
+    <a class="toc-sub" href="#room-fields">Campos de la Room</a>
+    <a class="toc-sub" href="#difficulty">Dificultades</a>
+    <a href="#step4">Paso 4: Añadir preguntas</a>
+    <a class="toc-sub" href="#question-fields">Campos de la pregunta</a>
+    <a href="#step5">Paso 5: Publicar</a>
+    <a href="#rules">Reglas y restricciones</a>
+    <a href="#stats">Ver estadísticas</a>
+  </aside>
+
+  <main class="content">
+
+    <section id="what-is">
+      <h2>¿Qué es el Creator Mode?</h2>
+      <p>
+        El <strong style="color:var(--gold)">Creator Mode</strong> es la funcionalidad que permite a cualquier
+        usuario registrado diseñar sus propias Escape Rooms con preguntas personalizadas y publicarlas en el
+        catálogo público para que otros jugadores puedan disfrutarlas.
+      </p>
+      <p>
+        Una Room creada por ti puede tener entre <strong>4 y 62 preguntas</strong>, con título, descripción,
+        dificultad y un número mínimo de respuestas correctas para completarla. Una vez publicada, aparece
+        en el catálogo y cualquier usuario puede jugarla directamente desde el dashboard.
+      </p>
+      <div class="info-box tip">
+        💡 No necesitas saber programar para crear una Room. Todo se hace desde la interfaz web del dashboard.
+      </div>
+    </section>
+
+    <section id="step1">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h3>Iniciar sesión en el Dashboard</h3>
+        <p>
+          Abre el dashboard en <code>http://localhost:8501</code> y accede con tu usuario y contraseña.
+          Si no tienes cuenta, regístrate en el tab <em>Registrarse</em>.
+        </p>
+        <p>
+          Una vez autenticado, verás los tabs principales en la parte superior de la pantalla.
+        </p>
+      </div>
+    </section>
+
+    <section id="step2">
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h3>Ir a Creator Studio</h3>
+        <p>
+          Haz clic en el tab <strong>⚒️ Creator Studio</strong>. Aquí encontrarás tres secciones:
+        </p>
+        <ul style="margin:.5rem 0 .5rem 1.5rem;color:var(--text);">
+          <li><strong style="color:var(--gold)">Mis Rooms</strong> — lista de rooms que has creado, con opciones para publicar o eliminar.</li>
+          <li><strong style="color:var(--gold)">Nueva Room</strong> — formulario para crear una nueva room.</li>
+          <li><strong style="color:var(--gold)">Questions de la Room</strong> — gestión de preguntas para la room seleccionada.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="step3">
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h3>Crear una Room</h3>
+        <p>Rellena el formulario <em>Nueva Room</em> con los siguientes campos:</p>
+      </div>
+
+      <h3 id="room-fields">Campos de la Room</h3>
+      <ul class="field-list">
+        <li>
+          <span class="field-name">Título</span>
+          <span class="field-desc">Nombre de tu Escape Room. Máximo 100 caracteres. Aparecerá en el catálogo y en el HUD del juego.</span>
+        </li>
+        <li>
+          <span class="field-name">Descripción</span>
+          <span class="field-desc">Descripción opcional de la temática o historia de la room. Máximo 500 caracteres. Se muestra en las cards del catálogo.</span>
+        </li>
+        <li>
+          <span class="field-name">Dificultad</span>
+          <span class="field-desc">Nivel de dificultad percibida. Afecta el filtro del catálogo. Ver tabla de dificultades abajo.</span>
+        </li>
+        <li>
+          <span class="field-name">Mínimo de correctas</span>
+          <span class="field-desc">Número mínimo de respuestas correctas que el jugador necesita para "escapar". Debe ser ≥ 1 y ≤ número total de preguntas.</span>
+        </li>
+      </ul>
+
+      <h3 id="difficulty">Dificultades disponibles</h3>
+      <div class="diff-grid">
+        <div class="diff-card">
+          <span class="diff-icon">⚔️</span>
+          <div class="diff-name">Fácil</div>
+          <div class="diff-desc">Preguntas accesibles para todos los públicos. Recomendado para rooms de introducción.</div>
+        </div>
+        <div class="diff-card">
+          <span class="diff-icon">🗡️🗡️</span>
+          <div class="diff-name">Medio</div>
+          <div class="diff-desc">Nivel estándar. Requiere conocimiento moderado del tema. Dificultad por defecto.</div>
+        </div>
+        <div class="diff-card">
+          <span class="diff-icon">💀</span>
+          <div class="diff-name">Difícil</div>
+          <div class="diff-desc">Preguntas desafiantes para expertos. Ideal para rooms especializadas.</div>
+        </div>
+      </div>
+
+      <div class="info-box tip">
+        💡 Haz clic en <strong>Crear Room</strong> para guardarla. La room se crea en estado <em>Borrador</em> y no es visible en el catálogo hasta que la publiques.
+      </div>
+    </section>
+
+    <section id="step4">
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <h3>Añadir preguntas a la Room</h3>
+        <p>
+          En la sección <em>Questions de la Room</em>, selecciona tu room del desplegable y rellena el
+          formulario <em>Nueva Question</em>:
+        </p>
+      </div>
+
+      <h3 id="question-fields">Campos de la pregunta</h3>
+      <ul class="field-list">
+        <li>
+          <span class="field-name">Texto</span>
+          <span class="field-desc">El enunciado de la pregunta. Máximo 500 caracteres. Se muestra en el panel inferior del HUD durante el juego.</span>
+        </li>
+        <li>
+          <span class="field-name">Opción 0</span>
+          <span class="field-desc">Primera opción de respuesta. Máximo 200 caracteres. Se muestra con la tecla [1].</span>
+        </li>
+        <li>
+          <span class="field-name">Opción 1</span>
+          <span class="field-desc">Segunda opción de respuesta. Se muestra con la tecla [2].</span>
+        </li>
+        <li>
+          <span class="field-name">Opción 2</span>
+          <span class="field-desc">Tercera opción de respuesta. Se muestra con la tecla [3].</span>
+        </li>
+        <li>
+          <span class="field-name">Opción 3</span>
+          <span class="field-desc">Cuarta opción de respuesta. Se muestra con la tecla [4].</span>
+        </li>
+        <li>
+          <span class="field-name">Índice correcto</span>
+          <span class="field-desc">Número de la opción correcta: <strong>0</strong>, <strong>1</strong>, <strong>2</strong> o <strong>3</strong>. Corresponde a las opciones anteriores.</span>
+        </li>
+      </ul>
+
+      <div class="info-box warn">
+        ⚠️ Necesitas al menos <strong>4 preguntas</strong> para poder publicar la room. El máximo es <strong>62 preguntas</strong>.
+      </div>
+
+      <h3>Gestionar preguntas existentes</h3>
+      <p>
+        Las preguntas ya creadas aparecen como acordeones expandibles. Cada uno muestra el texto de la
+        pregunta, las 4 opciones (con ✅ en la correcta) y un botón para eliminarla.
+      </p>
+    </section>
+
+    <section id="step5">
+      <div class="step-card">
+        <div class="step-num">5</div>
+        <h3>Publicar la Room</h3>
+        <p>
+          Cuando tu room tenga al menos 4 preguntas, aparecerá el botón <strong>Publicar</strong>
+          en la sección <em>Mis Rooms</em>.
+        </p>
+      </div>
+
+      <p>El proceso de publicación:</p>
+      <ol style="margin:.5rem 0 1rem 1.5rem;color:var(--text);">
+        <li style="margin-bottom:.4rem">Verifica que la room tiene entre 4 y 62 preguntas (el botón estará deshabilitado si no).</li>
+        <li style="margin-bottom:.4rem">Haz clic en <strong style="color:var(--gold)">Publicar</strong>.</li>
+        <li style="margin-bottom:.4rem">El estado cambia de 🟡 <em>Borrador</em> a 🟢 <em>Publicado</em>.</li>
+        <li>La room aparece inmediatamente en el catálogo público y en el tab <em>Jugar</em>.</li>
+      </ol>
+
+      <div class="info-box tip">
+        💡 Una vez publicada, cualquier usuario puede jugar tu room desde el catálogo o desde el tab Jugar.
+      </div>
+    </section>
+
+    <section id="rules">
+      <h2>Reglas y restricciones</h2>
+      <ul class="rules-list">
+        <li>
+          <span class="ri">🔒</span>
+          <span><strong style="color:var(--parchment)">Solo el propietario puede editar o eliminar su room.</strong> Otros usuarios solo pueden verla y jugarla.</span>
+        </li>
+        <li>
+          <span class="ri">🚫</span>
+          <span><strong style="color:var(--parchment)">No se puede eliminar una room publicada que ya tiene sesiones de juego.</strong> Si intentas eliminarla, recibirás un error 409. Esto protege el historial de los jugadores.</span>
+        </li>
+        <li>
+          <span class="ri">📋</span>
+          <span><strong style="color:var(--parchment)">Las rooms en borrador no son visibles en el catálogo público.</strong> Solo tú puedes verlas en Creator Studio.</span>
+        </li>
+        <li>
+          <span class="ri">🔢</span>
+          <span><strong style="color:var(--parchment)">Mínimo 4 preguntas, máximo 62 para publicar.</strong> El botón Publicar se deshabilita automáticamente si no se cumple este requisito.</span>
+        </li>
+        <li>
+          <span class="ri">✅</span>
+          <span><strong style="color:var(--parchment)">El índice correcto debe ser 0, 1, 2 o 3.</strong> Corresponde a las opciones option_0 … option_3 respectivamente.</span>
+        </li>
+        <li>
+          <span class="ri">📏</span>
+          <span><strong style="color:var(--parchment)">min_correct no puede superar el número de preguntas.</strong> Si tienes 5 preguntas, el mínimo de correctas no puede ser 6.</span>
+        </li>
+      </ul>
+    </section>
+
+    <section id="stats">
+      <h2>Ver estadísticas de tu Room</h2>
+      <p>
+        Una vez que tu room tenga partidas jugadas, puedes ver sus estadísticas a través de la API:
+      </p>
+      <pre><code>GET /rooms/{id}/stats/
+Authorization: Bearer &lt;tu_token&gt;
+
+// Respuesta 200
+{
+  "total_games":      12,
+  "avg_time":         187.4,
+  "completion_rate":  75.0
+}</code></pre>
+      <table>
+        <thead><tr><th>Campo</th><th>Descripción</th></tr></thead>
+        <tbody>
+          <tr><td><code>total_games</code></td><td>Número total de partidas jugadas en tu room</td></tr>
+          <tr><td><code>avg_time</code></td><td>Tiempo promedio en segundos de todas las partidas</td></tr>
+          <tr><td><code>completion_rate</code></td><td>Porcentaje de partidas completadas exitosamente (0–100)</td></tr>
+        </tbody>
+      </table>
+      <div class="info-box warn">
+        ⚠️ Solo el propietario de la room puede acceder a sus estadísticas. Otros usuarios recibirán un error 403.
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <p>Escape Room 3D &nbsp;&middot;&nbsp; <span>Guía del Creator</span></p>
+</footer>
+
+</body>
+</html>
